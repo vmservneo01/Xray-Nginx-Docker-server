@@ -1,0 +1,43 @@
+services:
+  xray:  
+    image: ghcr.io/xtls/xray-core:26.6.27                                                                  
+    container_name: xray 
+    user: "0:0"          
+    restart: unless-stopped                                                                                
+    command: ["run", "-config", "/etc/xray/config.json"]                                                   
+    volumes:             
+      - ./xray/config.json:/etc/xray/config.json:ro                                                        
+      - ./certs:/etc/xray-certs:ro                                                                         
+      - ./logs/xray:/var/log/xray                                                                          
+    ports:               
+      - "443:443/tcp"    
+      - "8443:8443/tcp"  
+      - "8444:8444/tcp"
+      - "8445:8445/tcp"
+      - "443:443/udp"  
+    networks:          
+      - proxy_net
+    security_opt:
+      - no-new-privileges:true
+
+  nginx:
+    image: nginx:1.29.1
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - xray
+    ports:
+      - "9443:9443/tcp"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./my-site:/usr/share/nginx/html:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - proxy_net
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  proxy_net:
+    driver: bridge

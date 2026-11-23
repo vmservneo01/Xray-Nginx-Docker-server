@@ -1,0 +1,253 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log"
+  },
+  "inbounds": [
+    {
+      "tag": "vless-reality-vision",
+      "listen": "0.0.0.0",
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          { "id": "__USER1_UUID__", "flow": "xtls-rprx-vision", "email": "user1" },
+          { "id": "__USER2_UUID__", "flow": "xtls-rprx-vision", "email": "user2" },
+          { "id": "__USER3_UUID__", "flow": "xtls-rprx-vision", "email": "user3" },
+          { "id": "__USER4_UUID__", "flow": "xtls-rprx-vision", "email": "user4" },
+          { "id": "__USER5_UUID__", "flow": "xtls-rprx-vision", "email": "user5" }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "target": "__REALITY_DEST__",
+          "xver": 0,
+          "serverNames": ["__REALITY_SNI__"],
+          "privateKey": "__REALITY_PRIVATE_KEY__",
+          "shortIds": [
+            "__USER1_SHORT_ID__",
+            "__USER2_SHORT_ID__",
+            "__USER3_SHORT_ID__",
+            "__USER4_SHORT_ID__",
+            "__USER5_SHORT_ID__"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "vless-tls-fallback",
+      "listen": "0.0.0.0",
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          { "id": "__USER1_UUID__", "email": "user1" },
+          { "id": "__USER2_UUID__", "email": "user2" },
+          { "id": "__USER3_UUID__", "email": "user3" },
+          { "id": "__USER4_UUID__", "email": "user4" },
+          { "id": "__USER5_UUID__", "email": "user5" }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "path": "__WS_PATH__",
+            "dest": 8082,
+            "xver": 0
+          },
+          {
+            "dest": "nginx:8085",
+            "xver": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "alpn": ["http/1.1"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray-certs/server.crt",
+              "keyFile": "/etc/xray-certs/server.key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "tag": "vless-ws-internal",
+      "listen": "0.0.0.0",
+      "port": 8082,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          { "id": "__USER1_UUID__", "email": "user1" },
+          { "id": "__USER2_UUID__", "email": "user2" },
+          { "id": "__USER3_UUID__", "email": "user3" },
+          { "id": "__USER4_UUID__", "email": "user4" },
+          { "id": "__USER5_UUID__", "email": "user5" }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "__WS_PATH__"
+        }
+      }
+    },
+    {
+      "tag": "trojan-grpc-reality",
+      "listen": "0.0.0.0",
+      "port": 8444,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          { "password": "__USER1_TROJAN_PASSWORD__", "email": "user1" },
+          { "password": "__USER2_TROJAN_PASSWORD__", "email": "user2" },
+          { "password": "__USER3_TROJAN_PASSWORD__", "email": "user3" },
+          { "password": "__USER4_TROJAN_PASSWORD__", "email": "user4" },
+          { "password": "__USER5_TROJAN_PASSWORD__", "email": "user5" }
+        ]
+      },
+      "streamSettings": {
+        "network": "grpc",
+        "security": "reality",
+        "grpcSettings": {
+          "serviceName": "trojan-tunnel"
+        },
+        "realitySettings": {
+          "show": false,
+          "target": "__REALITY_DEST__",
+          "xver": 0,
+          "serverNames": ["__REALITY_SNI__"],
+          "privateKey": "__REALITY_PRIVATE_KEY__",
+          "shortIds": [
+            "__USER1_SHORT_ID__",
+            "__USER2_SHORT_ID__",
+            "__USER3_SHORT_ID__",
+            "__USER4_SHORT_ID__",
+            "__USER5_SHORT_ID__"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "vless-xhttp-reality",
+      "listen": "0.0.0.0",
+      "port": 8445,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          { "id": "__USER1_UUID__", "email": "user1" },
+          { "id": "__USER2_UUID__", "email": "user2" },
+          { "id": "__USER3_UUID__", "email": "user3" },
+          { "id": "__USER4_UUID__", "email": "user4" },
+          { "id": "__USER5_UUID__", "email": "user5" }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "xhttpSettings": {
+          "path": "__XHTTP_REALITY_PATH__",
+          "mode": "stream-one"
+        },
+        "realitySettings": {
+          "show": false,
+          "target": "__REALITY_DEST__",
+          "xver": 0,
+          "serverNames": ["__REALITY_SNI__"],
+          "privateKey": "__REALITY_PRIVATE_KEY__",
+          "shortIds": [
+            "__USER1_SHORT_ID__",
+            "__USER2_SHORT_ID__",
+            "__USER3_SHORT_ID__",
+            "__USER4_SHORT_ID__",
+            "__USER5_SHORT_ID__"
+          ]
+        }
+      }
+    },
+    {
+      "tag": "hysteria2",
+      "listen": "0.0.0.0",
+      "port": 443,
+      "protocol": "hysteria",
+      "settings": {
+        "version": 2,
+        "users": [
+          { "auth": "__USER1_HY2_PASSWORD__", "email": "user1" },
+          { "auth": "__USER2_HY2_PASSWORD__", "email": "user2" },
+          { "auth": "__USER3_HY2_PASSWORD__", "email": "user3" },
+          { "auth": "__USER4_HY2_PASSWORD__", "email": "user4" },
+          { "auth": "__USER5_HY2_PASSWORD__", "email": "user5" }
+        ]
+      },
+      "streamSettings": {
+        "network": "hysteria",
+        "security": "tls",
+        "hysteriaSettings": {
+          "version": 2,
+          "masquerade": {
+            "type": "string",
+            "content": "Not Found",
+            "statusCode": 404
+          }
+        },
+        "tlsSettings": {
+          "alpn": ["h3"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray-certs/server.crt",
+              "keyFile": "/etc/xray-certs/server.key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "tag": "vless-xhttp-packet-up",
+      "listen": "0.0.0.0",
+      "port": 8083,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          { "id": "__USER1_UUID__", "email": "user1" },
+          { "id": "__USER2_UUID__", "email": "user2" },
+          { "id": "__USER3_UUID__", "email": "user3" },
+          { "id": "__USER4_UUID__", "email": "user4" },
+          { "id": "__USER5_UUID__", "email": "user5" }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "xhttpSettings": {
+          "path": "__XHTTP_PATH__",
+          "mode": "packet-up"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": []
+  }
+}

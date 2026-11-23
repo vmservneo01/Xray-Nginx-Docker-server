@@ -1,0 +1,133 @@
+<!DOCTYPE html>                                                                                                                                                                              
+<html lang="ru">                                                                                                                                                                             
+<head>                                                                                                                                                                                       
+<meta charset="utf-8">                                                                                                                                                                       
+<meta name="viewport" content="width=device-width, initial-scale=1">                                                                                                                         
+<title>Enterprise Core API Gateway Documentation</title>                                                                                                                                     
+<style>                                                                                                                                                                                      
+*{box-sizing:border-box}                                                                                                                                                                     
+html{scroll-behavior:smooth}                                                                                                                                                                 
+body{margin:0;font:15px/1.6 Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;color:#333;background:#fff}                                                                                   
+a{color:inherit;text-decoration:none}                                                                                                                                                        
+code{font:13px/1.4 Consolas,Menlo,"Courier New",monospace;background:#f3f3f3;border:1px solid #e3e3e3;border-radius:3px;padding:1px 5px;color:#c7254e}                                       
+.side{position:fixed;top:0;left:0;bottom:0;width:260px;overflow-y:auto;background:#fafafa;border-right:1px solid #e6e6e6;padding:18px 0}                                                     
+.side ul{list-style:none;margin:0;padding:0}                                                                                                                                                 
+.side .grp{padding:14px 20px 6px;font-size:12px;letter-spacing:.04em;color:#888}                                                                                                             
+.side a{display:block;padding:7px 20px;font-size:13.5px;color:#333;border-left:3px solid transparent}                                                                                        
+.side a:hover,.side a:focus{background:#f0f0f0;border-left-color:#333;outline:none}                                                                                                          
+.side .m{margin-right:8px}                                                                                                                                                                   
+.m{display:inline-block;min-width:44px;text-align:center;padding:1px 6px;border-radius:3px;font-size:11px;font-weight:700;text-transform:uppercase;color:#fff}
+.get{background:#2f8132}.post{background:#186faf}.put{background:#95507c}.delete{background:#c62828}
+main{margin-left:260px;max-width:860px;padding:0 48px 80px}
+section{padding:36px 0;border-bottom:1px solid #e6e6e6}
+h1{font-size:30px;margin:0 0 6px;font-weight:700}
+h2{font-size:22px;margin:0 0 10px;font-weight:700;color:#333}
+h4{margin:20px 0 8px;font-size:14px;color:#555}
+.ver{display:inline-block;background:#eee;border-radius:3px;padding:0 8px;font-size:13px;color:#555;margin-left:8px;vertical-align:middle}
+.ep{display:flex;align-items:center;gap:10px;background:#263238;color:#fff;border-radius:4px;padding:10px 14px;margin:14px 0}
+.ep code{background:none;border:0;color:#e0e6e8;font-size:14px;padding:0}
+.resp{list-style:none;margin:0;padding:0}
+.resp li{display:flex;gap:14px;padding:9px 0;border-top:1px solid #eee}
+.resp b{min-width:44px;color:#1d8127}
+.resp .c4 b{color:#d41f1c}
+.kv{border:1px solid #e6e6e6;border-radius:4px;padding:4px 16px;margin-top:12px}
+.kv div{display:flex;gap:14px;padding:8px 0;border-top:1px solid #eee}
+.kv div:first-child{border-top:0}
+.kv span:first-child{min-width:90px;color:#777}
+@media(max-width:800px){
+.side{position:static;width:auto;border-right:0;border-bottom:1px solid #e6e6e6;max-height:240px}
+main{margin-left:0;padding:0 18px 60px}
+}
+</style>
+</head>
+<body>
+<nav class="side" aria-label="API navigation"><ul>
+<li class="grp">Overview</li>
+<li><a href="#intro">Introduction</a></li>
+<li><a href="#auth">Authentication</a></li>
+<li class="grp">Endpoints</li>
+<li><a href="#post-auth-login"><span class="m post">post</span>Авторизация узла (Синхронизация)</a></li>
+<li><a href="#post-auth-refresh"><span class="m post">post</span>Обновление сессии</a></li>
+<li><a href="#get-users-sync"><span class="m get">get</span>Получить список активных сессий</a></li>
+<li><a href="#get-users-id"><span class="m get">get</span>Проверка статуса узла по ID</a></li>
+<li><a href="#put-users-id"><span class="m put">put</span>Обновление конфигурации узла</a></li>
+<li><a href="#delete-users-id"><span class="m delete">delete</span>Принудительное отключение узла</a></li>
+<li><a href="#get-metrics-stream"><span class="m get">get</span>Сбор телеметрии</a></li>
+<li><a href="#get-healthz"><span class="m get">get</span>Проверка жизнеспособности (Liveness Probe)</a></li>
+</ul></nav>
+<main>
+<section id="intro">
+<h1>Enterprise Core Internal API Gateway<span class="ver">v1.4.2</span></h1>
+<p>Служебный программный интерфейс единого шлюза авторизации, синхронизации данных и управления распределенными микросервисами компании. Доступ к конечным точкам API (Endpoints) разрешен исключительно для авторизованных узлов внутренней инфраструктуры облака при наличии валидного заголовка <code>X-API-KEY</code>.</p>
+<h4>Base URL</h4>
+<div class="kv"><div><span>Production Cluster Gateway</span><code>/api/v1</code></div></div>
+</section>
+<section id="auth">
+<h2>Authentication</h2>
+<div class="kv">
+<div><span>Scheme</span><span>ApiKeyAuth</span></div>
+<div><span>Type</span><span>apiKey</span></div>
+<div><span>Location</span><span>header</span></div>
+<div><span>Name</span><code>X-API-KEY</code></div>
+</div>
+<p>Уникальный токен доступа к микросервисам инфраструктуры.</p>
+</section>
+<section id="post-auth-login">
+<h2>Авторизация узла (Синхронизация)</h2>
+<p>Проверка подлинности сервиса и генерация сессионного JWT-токена для внутреннего обмена данными.</p>
+<div class="ep"><span class="m post">post</span><code>/api/v1/auth/login</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Успешная авторизация, токен выпущен.</span></li><li class="c4"><b>401</b><span>Ошибка безопасности. Неверный X-API-KEY.</span></li></ul>
+</section>
+<section id="post-auth-refresh">
+<h2>Обновление сессии</h2>
+<p>Продление времени жизни текущего токена авторизации.</p>
+<div class="ep"><span class="m post">post</span><code>/api/v1/auth/refresh</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Токен успешно обновлен.</span></li></ul>
+</section>
+<section id="get-users-sync">
+<h2>Получить список активных сессий</h2>
+<p>Запрос реестра активных авторизованных пользователей из распределенной базы данных.</p>
+<div class="ep"><span class="m get">get</span><code>/api/v1/users/sync</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Реестр успешно выгружен.</span></li><li class="c4"><b>401</b><span>Доступ запрещен.</span></li></ul>
+</section>
+<section id="get-users-id">
+<h2>Проверка статуса узла по ID</h2>
+
+<div class="ep"><span class="m get">get</span><code>/api/v1/users/{id}</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Узел активен и стабилен.</span></li></ul>
+</section>
+<section id="put-users-id">
+<h2>Обновление конфигурации узла</h2>
+
+<div class="ep"><span class="m put">put</span><code>/api/v1/users/{id}</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Конфигурация успешно применена.</span></li></ul>
+</section>
+<section id="delete-users-id">
+<h2>Принудительное отключение узла</h2>
+
+<div class="ep"><span class="m delete">delete</span><code>/api/v1/users/{id}</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>204</b><span>Узел удален из реестра балансировщика.</span></li></ul>
+</section>
+<section id="get-metrics-stream">
+<h2>Сбор телеметрии</h2>
+<p>Потоковый запрос для сбора системных логов, утилизации CPU/RAM и сетевой активности контейнеров.</p>
+<div class="ep"><span class="m get">get</span><code>/api/v1/metrics/stream</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Поток метрик инициализирован.</span></li></ul>
+</section>
+<section id="get-healthz">
+<h2>Проверка жизнеспособности (Liveness Probe)</h2>
+<p>Стандартный эндпоинт для автоматических систем мониторинга облака (K8s / Yandex Cloud) для проверки статуса контейнера.</p>
+<div class="ep"><span class="m get">get</span><code>/api/v1/healthz</code></div>
+<h4>Responses</h4>
+<ul class="resp"><li class="c2"><b>200</b><span>Контейнер работает стабильно.</span></li></ul>
+</section>
+</main>
+</body>
+</html>

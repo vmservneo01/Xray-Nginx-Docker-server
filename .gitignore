@@ -1,0 +1,12 @@
+# Runtime secrets and generated state
+secrets/
+certs/
+logs/
+output/
+backups/
+xray/config.json
+nginx/nginx.conf
+*.bak.*
+*.tmp
+*.csv
+__pycache__/
