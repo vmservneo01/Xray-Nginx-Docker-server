@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 
 import ipaddress
 import os
@@ -7,7 +7,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-PROJECT_DIR = Path("/opt/xray-server-final")
+PROJECT_DIR = Path("/opt/Xray-Nginx-Docker-server")
 ENV_FILE = PROJECT_DIR / "secrets" / "generated-values.env"
 
 DEFAULT_DEST = "www.cloudflare.com:443"

@@ -1,9 +1,9 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 set -Eeuo pipefail
 umask 077
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-EXPECTED_DIR="/opt/xray-server-final"
+EXPECTED_DIR="/opt/Xray-Nginx-Docker-server"
 
 log() {
     printf '\n[INFO] %s\n' "$1"

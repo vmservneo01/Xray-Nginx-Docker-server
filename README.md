@@ -193,21 +193,25 @@ Docker и Docker Compose устанавливаются сценарием `depl
 sudo apt update
 sudo apt install -y git
 ```
+### 2. Переход в каталог /opt
+```bash
+cd /opt
+```
 
-### 2. Клонирование репозитория
+### 3. Клонирование репозитория
 
 ```bash
 git clone https://github.com/vmservneo01/Xray-Nginx-Docker-server.git
 ```
 
 
-### 3. Переход в каталог проекта
+### 4. Переход в каталог проекта
 
 ```bash
 cd Xray-Nginx-Docker-server
 ```
 
-### 4. Проверка файлов
+### 5. Проверка файлов
 
 ```bash
 ls -la
@@ -270,7 +274,7 @@ CSV создаётся на локальном компьютере. После 
 После передачи CSV на сервер выполните:
 
 ```bash
-cd /opt/xray-server-final
+cd /opt/Xray-Nginx-Docker-server
 sudo python3 scripts/select-reality-target.py /path/to/scanner.csv
 ```
 
@@ -291,7 +295,7 @@ Wildcard-имена отклоняются.
 После изменения REALITY-цели необходимо пересобрать конфигурации и перезапустить Xray:
 
 ```bash
-cd /opt/xray-server-final
+cd /opt/Xray-Nginx-Docker-server
 sudo bash scripts/build-configs.sh
 sudo docker compose restart xray
 ```
@@ -326,7 +330,7 @@ sudo bash deployment.sh
 12. Генерирует клиентские профили.
 13. Настраивает права доступа к файлам и каталогам проекта.
 
-Сценарий рассчитан на первичное развёртывание в `/opt/xray-server-final`.
+Сценарий рассчитан на первичное развёртывание в `/opt/Xray-Nginx-Docker-server`.
 
 Он не предназначен для повторной установки поверх существующего непустого каталога проекта.
 
@@ -436,7 +440,7 @@ output/client-profiles.txt
 После развёртывания рекомендуется выполнить диагностический скрипт.
 
 ```bash
-cd /opt/xray-server-final
+cd /opt/Xray-Nginx-Docker-server
 sudo bash scripts/checks.sh
 ```
 
@@ -465,7 +469,7 @@ sudo docker logs nginx
 ### Проверка конфигурации Xray
 
 ```bash
-cd /opt/xray-server-final
+cd /opt/Xray-Nginx-Docker-server
 sudo docker compose exec xray xray run -test -config /etc/xray/config.json
 ```
 
@@ -478,7 +482,7 @@ sudo docker compose exec xray xray run -test -config /etc/xray/config.json
 Все команды выполняются из каталога проекта:
 
 ```bash
-cd /opt/xray-server-final
+cd /opt/Xray-Nginx-Docker-server
 ```
 
 ### Просмотр состояния контейнеров

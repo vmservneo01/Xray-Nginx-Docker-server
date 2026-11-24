@@ -1,8 +1,8 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 set -Eeuo pipefail
 umask 077
 
-PROJECT_DIR="/opt/xray-server-final"
+PROJECT_DIR="/opt/Xray-Nginx-Docker-server"
 CERT_DIR="${PROJECT_DIR}/certs"
 SECRETS_DIR="${PROJECT_DIR}/secrets"
 
@@ -157,7 +157,7 @@ log "Генерируем данные пяти пользователей..."
 
 {
     printf 'PUBLIC_IP=%s\n' "$PUBLIC_IP"
-Fingerprint самоподписанного TLS-сертификата.
+# Fingerprint самоподписанного TLS-сертификата.
     printf 'CERT_FINGERPRINT=%s\n' "$CERT_FINGERPRINT"
 
     printf 'REALITY_PRIVATE_KEY=%s\n' "$REALITY_PRIVATE_KEY"
